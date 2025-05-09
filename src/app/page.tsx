@@ -39,7 +39,7 @@ export default function Home() {
       {/* Video Background Section */}
       <section className='video-background-section'>
         <video autoPlay loop muted playsInline> 
-          <source src="/videos/test-video.mp4" type="video/mp4" /> */
+          <source src="/videos/vidd.mp4" type="video/mp4" /> */
           Your browser does not support the video tag.
         </video>
         <div className="video-overlay"></div> {/* Optional dark overlay */}

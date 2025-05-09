@@ -8,6 +8,7 @@ import { getServerSideUser } from '@/lib/payload-utils'
 import { cookies } from 'next/headers'
 import UserAccountNav from './UserAccountNav'
 import MobileNav from './MobileNav'
+import Image from 'next/image'
 
 const Navbar = async () => {
   const nextCookies = cookies()
@@ -27,7 +28,14 @@ const Navbar = async () => {
               <div className='ml-4 flex lg:ml-0'>
                 <Link href='/'>
                   {/* Ensure Icons.logo is themed appropriately or is a neutral/multi-color design */}
-                  <Icons.logo className='h-10 w-10 text-primary' /> {/* Example: Forcing primary color if it's a single-color SVG */}
+                  {/* <Icons.logo className='h-10 w-10 text-primary' /> Example: Forcing primary color if it's a single-color SVG */}
+                  <Image
+                    src='/logo.png' // Assuming you have a logo image in the public folder
+                    alt='Logo'
+                    width={40} // Adjust size as needed
+                    height={40} // Adjust size as needed
+                    className='h-10 w-10 text-primary' // Use text-primary for color if applicable
+                    />
                 </Link>
               </div>
 

@@ -52,12 +52,12 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
             'right-3 transition',
             {
               [inactiveStyles]: slideConfig.isEnd,
-              'hover:bg-primary-300 text-primary-800 opacity-100':
+              'hover:bg-primary/10 text-primary opacity-100':
                 !slideConfig.isEnd,
             }
           )}
           aria-label='next image'>
-          <ChevronRight className='h-4 w-4 text-zinc-700' />{' '}
+          <ChevronRight className='h-4 w-4 text-primary' />
         </button>
         <button
           onClick={(e) => {

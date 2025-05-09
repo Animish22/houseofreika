@@ -40,7 +40,7 @@ export const ReceiptEmail = ({
   return (
     <Html>
       <Head />
-      <Preview>Your DigitalHippo Receipt</Preview>
+      <Preview>Your House of Reika Receipt</Preview>
 
       <Body style={main}>
         <Container style={container}>
@@ -225,8 +225,8 @@ const tableCell = { display: 'table-cell' }
 
 const heading = {
   fontSize: '28px',
-  fontWeight: '300',
-  color: '#888888',
+  fontWeight: '500',
+  color: '#BE123C', // Cherry red
 }
 
 const informationTable = {

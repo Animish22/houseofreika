@@ -16,20 +16,20 @@ const VerifyEmail = ({ token }: VerifyEmailProps) => {
       token,
     })
 
-  if (isError) {
-    return (
-      <div className='flex flex-col items-center gap-2'>
-        <XCircle className='h-8 w-8 text-red-600' />
-        <h3 className='font-semibold text-xl'>
-          There was a problem
-        </h3>
-        <p className='text-muted-foreground text-sm'>
-          This token is not valid or might be expired.
-          Please try again.
-        </p>
-      </div>
-    )
-  }
+    if (isError) {
+      return (
+        <div className='flex flex-col items-center gap-2'>
+          <XCircle className='h-8 w-8 text-destructive' />
+          <h3 className='font-semibold text-xl text-foreground'>
+            There was a problem
+          </h3>
+          <p className='text-muted-foreground text-sm text-center'>
+            This token is not valid or might be expired.
+            Please try again.
+          </p>
+        </div>
+      )
+    }
 
   if (data?.success) {
     return (

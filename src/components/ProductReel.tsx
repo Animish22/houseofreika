@@ -1,10 +1,10 @@
 'use client'
 
 import { TQueryValidator } from '@/lib/validators/query-validator'
-import { Product } from '@/payload-types'
+import { Product } from '@/payload-types' // Assuming this type is correct
 import { trpc } from '@/trpc/client'
 import Link from 'next/link'
-import ProductListing from './ProductListing'
+import ProductListing from './ProductListing' // Assuming ProductListing is styled appropriately or will be
 
 interface ProductReelProps {
   title: string
@@ -29,12 +29,10 @@ const ProductReel = (props: ProductReelProps) => {
       }
     )
 
-    // console.log(queryResults);
-
   const products = queryResults?.pages.flatMap(
     (page) => page.items
   )
-  // console.log(products);
+
   let map: (Product | null)[] = []
   if (products && products.length) {
     map = products
@@ -49,11 +47,13 @@ const ProductReel = (props: ProductReelProps) => {
       <div className='md:flex md:items-center md:justify-between mb-4'>
         <div className='max-w-2xl px-4 lg:max-w-4xl lg:px-0'>
           {title ? (
-            <h1 className='text-2xl font-bold text-gray-900 sm:text-3xl'>
+            // Titles should use the main foreground color
+            <h1 className='text-2xl font-bold text-foreground sm:text-3xl'>
               {title}
             </h1>
           ) : null}
           {subtitle ? (
+            // Subtitles use muted foreground color
             <p className='mt-2 text-sm text-muted-foreground'>
               {subtitle}
             </p>
@@ -63,7 +63,8 @@ const ProductReel = (props: ProductReelProps) => {
         {href ? (
           <Link
             href={href}
-            className='hidden text-sm font-medium text-blue-600 hover:text-blue-500 md:block'>
+            // Links in this context can use the primary color
+            className='hidden text-sm font-medium text-primary hover:text-primary/80 md:block'> {/* Changed to text-primary */}
             Shop the collection{' '}
             <span aria-hidden='true'>&rarr;</span>
           </Link>

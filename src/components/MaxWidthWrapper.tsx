@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils' // Assuming you have a lib/utils.ts with cn function
 import { ReactNode } from 'react'
 
 const MaxWidthWrapper = ({

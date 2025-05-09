@@ -1,14 +1,12 @@
 'use client'
 
 import { PRODUCT_CATEGORIES } from '@/config'
-import { useOnClickOutside } from '@/hooks/use-on-click-outside'
+import { useOnClickOutside } from '@/hooks/use-on-click-outside' // Assuming this hook is set up
 import { useEffect, useRef, useState } from 'react'
-import NavItem from './NavItem'
+import NavItem from './NavItem' // This component would need theming
 
 const NavItems = () => {
-  const [activeIndex, setActiveIndex] = useState<
-    null | number
-  >(null)
+  const [activeIndex, setActiveIndex] = useState<null | number>(null)
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -31,6 +29,8 @@ const NavItems = () => {
   useOnClickOutside(navRef, () => setActiveIndex(null))
 
   return (
+    // The NavItems themselves (text) would be styled in NavItem.tsx
+    // This div is structural.
     <div className='flex gap-4 h-full' ref={navRef}>
       {PRODUCT_CATEGORIES.map((category, i) => {
         const handleOpen = () => {
@@ -42,11 +42,10 @@ const NavItems = () => {
         }
 
         const close = () => setActiveIndex(null)
-
         const isOpen = i === activeIndex
 
         return (
-          <NavItem
+          <NavItem // Ensure NavItem.tsx uses theme variables (e.g., text-foreground, hover:text-primary, bg-popover for its dropdown)
             category={category}
             close={close}
             handleOpen={handleOpen}

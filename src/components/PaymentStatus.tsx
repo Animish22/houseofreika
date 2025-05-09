@@ -43,7 +43,7 @@ const PaymentStatus = ({
         <p className='font-medium text-gray-900'>
           Order Status
         </p>
-        <p>
+        <p className={isPaid ? 'text-primary' : 'text-muted-foreground'}>
           {isPaid
             ? 'Payment successful'
             : 'Pending payment'}

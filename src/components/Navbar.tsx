@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
-import { Icons } from './Icons'
+import { Icons } from './Icons' // Assuming Icons.logo is adaptable or a multi-color SVG
 import NavItems from './NavItems'
 import { buttonVariants } from './ui/button'
 import Cart from './Cart'
@@ -10,21 +10,24 @@ import UserAccountNav from './UserAccountNav'
 import MobileNav from './MobileNav'
 
 const Navbar = async () => {
-  //get all the cookies that are present . 
   const nextCookies = cookies()
   const { user } = await getServerSideUser(nextCookies)
 
   return (
-    <div className='bg-white sticky z-50 top-0 inset-x-0 h-16'>
-      <header className='relative bg-white'>
+    // Use bg-background for the main navbar background
+    <div className='bg-background sticky z-50 top-0 inset-x-0 h-16'>
+      {/* Use bg-background for the header background */}
+      <header className='relative bg-background'>
         <MaxWidthWrapper>
-          <div className='border-b border-gray-200'>
+          {/* Use border-border for the bottom border */}
+          <div className='border-b border-border'>
             <div className='flex h-16 items-center'>
               <MobileNav />
 
               <div className='ml-4 flex lg:ml-0'>
                 <Link href='/'>
-                  <Icons.logo className='h-10 w-10' />
+                  {/* Ensure Icons.logo is themed appropriately or is a neutral/multi-color design */}
+                  <Icons.logo className='h-10 w-10 text-primary' /> {/* Example: Forcing primary color if it's a single-color SVG */}
                 </Link>
               </div>
 
@@ -38,15 +41,16 @@ const Navbar = async () => {
                     <Link
                       href='/sign-in'
                       className={buttonVariants({
-                        variant: 'ghost',
+                        variant: 'ghost', // Ghost buttons will use accent colors from CSS variables
                       })}>
                       Sign in
                     </Link>
                   )}
 
                   {user ? null : (
+                    // Use bg-border for the separator
                     <span
-                      className='h-6 w-px bg-gray-200'
+                      className='h-6 w-px bg-border'
                       aria-hidden='true'
                     />
                   )}
@@ -64,16 +68,18 @@ const Navbar = async () => {
                   )}
 
                   {user ? (
+                    // Use bg-border for the separator
                     <span
-                      className='h-6 w-px bg-gray-200'
+                      className='h-6 w-px bg-border'
                       aria-hidden='true'
                     />
                   ) : null}
 
                   {user ? null : (
                     <div className='flex lg:ml-6'>
+                      {/* Use bg-border for the separator */}
                       <span
-                        className='h-6 w-px bg-gray-200'
+                        className='h-6 w-px bg-border'
                         aria-hidden='true'
                       />
                     </div>

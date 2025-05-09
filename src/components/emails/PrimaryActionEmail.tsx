@@ -29,21 +29,20 @@ export const EmailTemplate = ({
     <Html>
       <Head />
       <Preview>
-        The marketplace for high-quality digital goods.
+        House of Reika - Luxury Fashion Marketplace
       </Preview>
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${process.env.NEXT_PUBLIC_SERVER_URL}/hippo-newsletter-sign-up.png`}
+            src={`${process.env.NEXT_PUBLIC_SERVER_URL}/logo.png`}
             width='150'
             height='150'
-            alt='DigitalHippo'
+            alt='House of Reika'
             style={logo}
           />
           <Text style={paragraph}>Hi there,</Text>
           <Text style={paragraph}>
-            Welcome to DigitalHippo, the marketplace for
-            high quality digital goods. Use the button below
+            Welcome to House of Reika, your destination for luxury fashion. Use the button below
             to {actionLabel}.
           </Text>
           <Section style={btnContainer}>
@@ -52,9 +51,9 @@ export const EmailTemplate = ({
             </Button>
           </Section>
           <Text style={paragraph}>
-            Best,
+            Best regards,
             <br />
-            The DigitalHippo team
+            House of Reika
           </Text>
           <Hr style={hr} />
           <Text style={footer}>
@@ -66,6 +65,7 @@ export const EmailTemplate = ({
     </Html>
   )
 }
+
 
 export const PrimaryActionEmailHtml = (
   props: EmailTemplateProps
@@ -96,14 +96,15 @@ const btnContainer = {
 }
 
 const button = {
-  padding: '12px 12px',
-  backgroundColor: '#2563eb',
+  padding: '12px 24px',
+  backgroundColor: '#BE123C', // Cherry red
   borderRadius: '3px',
   color: '#fff',
   fontSize: '16px',
   textDecoration: 'none',
   textAlign: 'center' as const,
   display: 'block',
+  fontWeight: '500',
 }
 
 const hr = {

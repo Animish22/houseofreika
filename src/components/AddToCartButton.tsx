@@ -28,8 +28,13 @@ const AddToCartButton = ({
         setIsSuccess(true)
       }}
       size='lg'
-      className='w-full'>
-      {isSuccess ? 'Added!' : 'Add to cart'}
+      variant={isSuccess ? 'secondary' : 'default'}
+      className={`w-full transition-all duration-300 font-semibold tracking-wide
+        ${isSuccess 
+          ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90' 
+          : 'bg-primary text-primary-foreground hover:bg-primary/90'
+        }`}>
+      {isSuccess ? 'Added to Cart ✓' : 'Add to Cart'}
     </Button>
   )
 }

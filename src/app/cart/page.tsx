@@ -1,6 +1,8 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { PRODUCT_CATEGORIES } from '@/config'
 import { useCart } from '@/hooks/use-cart'
 import { cn, formatPrice } from '@/lib/utils'
@@ -12,21 +14,27 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const Page = () => {
-  const { items, removeItem , clearCart} = useCart()
+  const { items, removeItem, clearCart } = useCart()
 
   const router = useRouter()
+
+  const [customerName, setCustomerName] = useState('')
+  const [shippingAddress, setShippingAddress] = useState('')
 
   const { mutate: createCheckoutSession, isLoading } =
     trpc.payment.createSession.useMutation({
       onSuccess: ({ url }) => {
-        console.log(url , "done");
-        if (url)
-        {
-          clearCart() ;
+        console.log(url, "done");
+        if (url) {
+          clearCart();
           router.push(url);
         }
       }
     })
+
+  const isFormValid = () => {
+    return customerName.trim() !== '' && shippingAddress.trim() !== '' && items.length > 0
+  }
 
   const productIds = items.map(({ product }) => product.id)
 
@@ -100,7 +108,7 @@ const Page = () => {
                       <div className='flex-shrink-0'>
                         <div className='relative h-24 w-24'>
                           {typeof image !== 'string' &&
-                          image.url ? (
+                            image.url ? (
                             <Image
                               fill
                               src={image.url}
@@ -166,6 +174,45 @@ const Page = () => {
             </ul>
           </div>
 
+
+          <section className='mt-8 lg:col-span-7'>
+            <div className='rounded-lg bg-gray-50 px-4 py-6 sm:p-6'>
+              <h2 className='text-lg font-medium text-gray-900 mb-4'>
+                Shipping Information
+              </h2>
+              <div className='space-y-4'>
+                <div>
+                  <label htmlFor='name' className='block text-sm font-medium text-gray-700'>
+                    Full Name
+                  </label>
+                  <Input
+                    id='name'
+                    type='text'
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder='Enter your full name'
+                    className='mt-1'
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor='address' className='block text-sm font-medium text-gray-700'>
+                    Shipping Address
+                  </label>
+                  <Textarea
+                    id='address'
+                    value={shippingAddress}
+                    onChange={(e) => setShippingAddress(e.target.value)}
+                    placeholder='Enter your complete shipping address'
+                    className='mt-1'
+                    required
+                    rows={4}
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section className='mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8'>
             <h2 className='text-lg font-medium text-gray-900'>
               Order summary
@@ -214,9 +261,13 @@ const Page = () => {
 
             <div className='mt-6'>
               <Button
-                disabled={items.length === 0 || isLoading}
+                disabled={!isFormValid() || isLoading}
                 onClick={() =>
-                  createCheckoutSession({ productIds })
+                  createCheckoutSession({
+                    productIds,
+                    customerName,
+                    shippingAddress
+                  })
                 }
                 className='w-full'
                 size='lg'>

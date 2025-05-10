@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { Icons } from './Icons' // Assuming Icons.logo is adaptable
 import Link from 'next/link'
+import Image from 'next/image'
 
 const Footer = () => {
   const pathname = usePathname()
@@ -23,7 +24,14 @@ const Footer = () => {
             <div className='pb-8 pt-16'>
               <div className='flex justify-center'>
                 {/* Logo color can be text-muted-foreground or text-primary for subtlety or emphasis */}
-                <Icons.logo className='h-12 w-auto text-muted-foreground' />
+                {/* <Icons.logo className='h-12 w-auto text-muted-foreground' /> */}
+                <Image
+                  src='/logo.png' // Assuming you have a logo image in the public folder
+                  alt='Logo'
+                  width={40} // Adjust size as needed
+                  height={40} // Adjust size as needed
+                  className='h-10 w-10 text-primary' // Use text-primary for color if applicable
+                />
               </div>
             </div>
           )}

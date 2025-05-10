@@ -11,11 +11,15 @@ import type Stripe from 'stripe'
 
 export const paymentRouter = router({
   createSession: privateProcedure
-    .input(z.object({ productIds: z.array(z.string()) }))
+    .input(z.object({ 
+      productIds: z.array(z.string()) ,
+      customerName : z.string(),
+      shippingAddress: z.string()
+    }))
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx
       console.log("Started");
-      let { productIds } = input
+      let { productIds , customerName , shippingAddress} = input
 
       if (productIds.length === 0) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -44,6 +48,8 @@ export const paymentRouter = router({
           _isPaid: false,
           products: filteredProducts.map((prod) => prod.id),
           user: user.id,
+          customerName,
+          shippingAddress
         },
       })
       console.log(`Id - ${order.id} yeh hai bhai aur order - ${order}`)
@@ -76,6 +82,8 @@ export const paymentRouter = router({
             metadata: {
               userId: user.id,
               orderId: order.id,
+              customerName,
+              shippingAddress
             },
             line_items,
           })

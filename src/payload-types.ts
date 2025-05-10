@@ -42,7 +42,7 @@ export interface Product {
   name: string;
   description?: string | null;
   price: number;
-  category: 'ui_kits' | 'icons';
+  category: 'tops' | 'co-ords' | 'dresses';
   product_files: string | ProductFile;
   approvedForSale?: ('pending' | 'approved' | 'denied') | null;
   priceId?: string | null;
@@ -109,6 +109,8 @@ export interface Order {
   _isPaid: boolean;
   user: string | User;
   products: (string | Product)[];
+  customerName: string;
+  shippingAddress: string;
   updatedAt: string;
   createdAt: string;
 }

@@ -21,6 +21,7 @@ import { trpc } from '@/trpc/client'
 import { toast } from 'sonner'
 import { ZodError } from 'zod'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 
 const Page = () => {
   const searchParams = useSearchParams()
@@ -39,7 +40,7 @@ const Page = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }, 
+    formState: { errors },
   } = useForm<TAuthCredentialsValidator>({
     resolver: zodResolver(AuthCredentialsValidator),
   })
@@ -82,7 +83,14 @@ const Page = () => {
       <div className='container relative flex pt-20 flex-col items-center justify-center lg:px-0'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
           <div className='flex flex-col items-center space-y-2 text-center'>
-            <Icons.logo className='h-20 w-20' />
+            {/* <Icons.logo className='h-20 w-20' /> */}
+            <Image
+              src='/logo.png' // Assuming you have a logo image in the public folder
+              alt='Logo'
+              width={20} // Adjust size as needed
+              height={20} // Adjust size as needed
+              className='h-10 w-10 text-primary' // Use text-primary for color if applicable
+            />
             <h1 className='text-2xl font-semibold tracking-tight'>
               Sign in to your {isSeller ? 'seller' : ''}{' '}
               account

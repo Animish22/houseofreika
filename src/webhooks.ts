@@ -13,6 +13,9 @@ export const stripeWebhookHandler = async (
   req: express.Request,
   res: express.Response
 ) => {
+
+  console.log("Webhook has been started . ") ;
+  
   const webhookRequest = req as any as WebhookRequest
   const body = webhookRequest.rawBody
   const signature = req.headers['stripe-signature'] || ''
@@ -60,7 +63,7 @@ export const stripeWebhookHandler = async (
       },
     })
 
-    const [user] = users
+    const [user] = await users
 
     if (!user)
       return res
@@ -77,12 +80,15 @@ export const stripeWebhookHandler = async (
       },
     })
 
-    const [order] = orders
+    const [order] = await orders
 
     if (!order)
       return res
         .status(404)
         .json({ error: 'No such order exists.' })
+
+      
+    console.log("Updating Payment to true")    
 
     await payload.update({
       collection: 'orders',
@@ -96,24 +102,26 @@ export const stripeWebhookHandler = async (
       },
     })
 
+    console.log("done");
+
     // send receipt
-    try {
-      const data = await resend.emails.send({
-        from: 'DigitalHippo <onboarding@resend.dev>',
-        to: [user.email],
-        subject:
-          'Thanks for your order! This is your receipt.',
-        html: ReceiptEmailHtml({
-          date: new Date(),
-          email: user.email,
-          orderId: session.metadata.orderId,
-          products: order.products as Product[],
-        }),
-      })
-      res.status(200).json({ data })
-    } catch (error) {
-      res.status(500).json({ error })
-    }
+    // try {
+    //   const data = await resend.emails.send({
+    //     from: 'DigitalHippo <onboarding@resend.dev>',
+    //     to: [user.email],
+    //     subject:
+    //       'Thanks for your order! This is your receipt.',
+    //     html: ReceiptEmailHtml({
+    //       date: new Date(),
+    //       email: user.email,
+    //       orderId: session.metadata.orderId,
+    //       products: order.products as Product[],
+    //     }),
+    //   })
+    //   res.status(200).json({ data })
+    // } catch (error) {
+    //   res.status(500).json({ error })
+    // }
   }
 
   return res.status(200).send()

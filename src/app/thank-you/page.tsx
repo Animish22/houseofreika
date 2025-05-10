@@ -34,8 +34,10 @@ const ThankYouPage = async ({
     },
   })
 
-  const [order] = orders
+  const [order] = await orders
 
+  console.log( ` order isPaid ${order?._isPaid} `) ; 
+    
   if (!order) return notFound()
 
   const orderUserId =

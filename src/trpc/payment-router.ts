@@ -14,6 +14,7 @@ export const paymentRouter = router({
     .input(z.object({ productIds: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx
+      console.log("Started");
       let { productIds } = input
 
       if (productIds.length === 0) {
@@ -45,7 +46,7 @@ export const paymentRouter = router({
           user: user.id,
         },
       })
-      // console.log(`${order.id} yeh hai bhai`)
+      console.log(`Id - ${order.id} yeh hai bhai aur order - ${order}`)
 
       const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
         []
@@ -89,6 +90,8 @@ export const paymentRouter = router({
     .input(z.object({ orderId: z.string() }))
     .query(async ({ input }) => {
       const { orderId } = input
+      console.log("Polling Order Status");
+      console.log(orderId);
 
       const payload = await getPayloadClient()
 

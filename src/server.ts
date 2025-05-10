@@ -42,6 +42,22 @@ const start = async () => {
     stripeWebhookHandler
   )
 
+  // if (process.env.NEXT_BUILD) {
+  //   app.listen(PORT, async () => {
+  //     payload.logger.info(
+  //       'Next.js is building for production'
+  //     )
+
+  //     // @ts-expect-error
+  //     await nextBuild(path.join(__dirname, '../'))
+
+  //     process.exit()
+  //   })
+
+  //   return
+  // }
+
+
   const payload = await getPayloadClient({
     initOptions: {
       express: app,

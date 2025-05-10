@@ -15,7 +15,7 @@ export const Orders: CollectionConfig = {
   admin: {
     useAsTitle: 'Your Orders',
     description:
-      'A summary of all your orders on DigitalHippo.',
+      'A summary of all your orders on HouseOfReika.',
   },
   access: {
     read: yourOwn,
@@ -30,11 +30,11 @@ export const Orders: CollectionConfig = {
       access: {
         read: ({ req }) => req.user.role === 'admin',
         create: () => false,
-        update: () => false,
+        update: ({req}) => req.user.role === 'admin',
       },
-      admin: {
-        hidden: true,
-      },
+      // admin: {
+      //   hidden: true,
+      // },
       required: true,
     },
     {

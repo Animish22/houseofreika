@@ -26,7 +26,7 @@ const Page = () => {
       onSuccess: ({ url }) => {
         console.log(url, "done");
         if (url) {
-          clearCart();
+          // clearCart();
           router.push(url);
         }
       }
@@ -37,6 +37,7 @@ const Page = () => {
   }
 
   const productIds = items.map(({ product }) => product.id)
+  console.log("Items are : " , items) ; 
 
   const [isMounted, setIsMounted] = useState<boolean>(false)
   useEffect(() => {

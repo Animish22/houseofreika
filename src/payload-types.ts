@@ -42,6 +42,7 @@ export interface Product {
   name: string;
   description?: string | null;
   price: number;
+  // quantity?: number,
   category: 'tops' | 'co-ords' | 'dresses';
   product_files: string | ProductFile;
   approvedForSale?: ('pending' | 'approved' | 'denied') | null;

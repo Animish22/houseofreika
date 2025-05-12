@@ -154,7 +154,7 @@ const Page = () => {
               </div>
             </form>
 
-            <div className='relative'>
+            {/* <div className='relative'>
               <div
                 aria-hidden='true'
                 className='absolute inset-0 flex items-center'>
@@ -165,9 +165,9 @@ const Page = () => {
                   or
                 </span>
               </div>
-            </div>
+            </div> */}
 
-            {isSeller ? (
+            {/* {isSeller ? (
               <Button
                 onClick={continueAsBuyer}
                 variant='secondary'
@@ -181,7 +181,7 @@ const Page = () => {
                 disabled={isLoading}>
                 Continue as seller
               </Button>
-            )}
+            )} */}
           </div>
         </div>
       </div>

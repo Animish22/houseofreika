@@ -53,7 +53,7 @@ const Footer = () => {
                     Become part of HouseOfReika
                   </h3>
                   {/* text-muted-foreground is already themed */}
-                  <p className='mt-2 text-sm text-muted-foreground'>
+                  {/* <p className='mt-2 text-sm text-muted-foreground'>
                     If you&apos;d like to sell unique and high-quality
                     items, you can do so in
                     minutes.{' '}
@@ -63,7 +63,7 @@ const Footer = () => {
                       className='whitespace-nowrap font-medium text-primary hover:text-primary/80'>
                       Get started &rarr;
                     </Link>
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>

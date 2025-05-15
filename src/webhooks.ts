@@ -5,6 +5,7 @@ import type Stripe from 'stripe'
 import { getPayloadClient } from './get-payload'
 import { Product, User } from './payload-types'
 import { Resend } from 'resend'
+import * as React from 'react'
 import { ReceiptEmailHtml } from './components/emails/ReceiptEmail'
 import { ToOwnerEmailHtml } from './components/emails/ToOwnerEmail'
 
@@ -15,8 +16,8 @@ export const stripeWebhookHandler = async (
   res: express.Response
 ) => {
 
-  console.log("Webhook has been started . ") ;
-  
+  console.log("Webhook has been started . ");
+
   const webhookRequest = req as any as WebhookRequest
   const body = webhookRequest.rawBody
   const signature = req.headers['stripe-signature'] || ''
@@ -32,10 +33,9 @@ export const stripeWebhookHandler = async (
     return res
       .status(400)
       .send(
-        `Webhook Error: ${
-          err instanceof Error
-            ? err.message
-            : 'Unknown Error'
+        `Webhook Error: ${err instanceof Error
+          ? err.message
+          : 'Unknown Error'
         }`
       )
   }
@@ -88,8 +88,8 @@ export const stripeWebhookHandler = async (
         .status(404)
         .json({ error: 'No such order exists.' })
 
-      
-    console.log("Updating Payment to true")    
+
+    console.log("Updating Payment to true")
 
     await payload.update({
       collection: 'orders',
@@ -101,43 +101,44 @@ export const stripeWebhookHandler = async (
           equals: session.metadata.orderId,
         },
       },
-    })    
+    })
     console.log("done");    // send receipt to customer and notification to owner
     try {
       const orderWithProducts = order as unknown as {
         products: Array<{ product: Product; quantity: number }>
         user: User
-      }
-
-      // Send receipt to customer
-      // await resend.emails.send({
-      //   from: 'House of Reika <onboarding@resend.dev>',
-      //   to: [user.email as string],
-      //   subject: 'Thanks for your order! This is your receipt.',
-      //   html: ReceiptEmailHtml({
-      //     date: new Date(),
-      //     email: user.email as string,
-      //     orderId: session.metadata.orderId as string,
-      //     products: orderWithProducts.products.map(({ product }) => product)
-      //   }).toString()
-      // });
+      }      // Send receipt to customer
+      await resend.emails.send({
+        from: 'House of Reika <support@houseofreika.com>',
+        to: [user.email as string],
+        subject: 'Thanks for your order! This is your receipt.',
+        react: React.createElement(ReceiptEmailHtml, {
+          date: new Date(),
+          email: user.email as string,
+          orderId: session.metadata.orderId as string,
+          products: orderWithProducts.products.map(({ product, quantity }) => ({
+            ...product,
+            quantity
+          }))
+        })
+      });
 
       // Send notification to owner
-      // await resend.emails.send({
-      //   from: 'House of Reika <onboarding@resend.dev>',
-      //   to: ['houseofreika@gmail.com'],
-      //   subject: `New Order Received from ${session.metadata.customerName}`,
-      //   html: ToOwnerEmailHtml({
-      //     customerName: session.metadata.customerName as string,
-      //     shippingAddress: session.metadata.shippingAddress as string,
-      //     date: new Date(),
-      //     orderId: session.metadata.orderId as string,
-      //     products: orderWithProducts.products.map(({ product }) => ({
-      //       ...product,
-      //       quantity: orderWithProducts.products.find(p => p.product.id === product.id)?.quantity || 1
-      //     }))
-      //   }).toString()
-      // });
+      await resend.emails.send({
+        from: 'House of Reika <support@houseofreika.com>',
+        to: ['houseofreika.official@gmail.com'],
+        subject: `New Order Received from ${session.metadata.customerName}`,
+        react: React.createElement(ToOwnerEmailHtml, {
+          customerName: session.metadata.customerName as string,
+          shippingAddress: session.metadata.shippingAddress as string,
+          date: new Date(),
+          orderId: session.metadata.orderId as string,
+          products: orderWithProducts.products.map(({ product }) => ({
+            ...product,
+            quantity: orderWithProducts.products.find(p => p.product.id === product.id)?.quantity || 1
+          }))
+        })
+      });
 
       res.status(200).json({ message: 'Emails sent successfully' })
     } catch (error) {

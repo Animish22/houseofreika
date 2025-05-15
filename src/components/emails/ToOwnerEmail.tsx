@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { Product } from "@/payload-types"
 import {
   Html,
@@ -59,7 +60,7 @@ export const ToOwnerEmailHtml = ({
           <Hr style={hr} />
 
           <Section style={section}>
-            <Text style={text}>Total Order Value: ${total}</Text>
+            <Text style={text}>Total Order Value: &#8377; {total}</Text>
           </Section>
 
           <Hr style={hr} />

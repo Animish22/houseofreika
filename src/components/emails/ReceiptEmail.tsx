@@ -25,7 +25,7 @@ interface ReceiptEmailProps {
   email: string
   date: Date
   orderId: string
-  products: Product[]
+  products:  Array<Product & { quantity: number }> 
 }
 
 export const ReceiptEmail = ({
@@ -34,8 +34,10 @@ export const ReceiptEmail = ({
   orderId,
   products,
 }: ReceiptEmailProps) => {
-  const total =
-    products.reduce((acc, curr) => acc + curr.price, 0) + 1
+   const total = products.reduce(
+    (acc, curr) => acc + (curr.price * curr.quantity), 
+    0
+  ) + 1 // 1 is transaction fee 
 
   return (
     <Html>
@@ -45,14 +47,14 @@ export const ReceiptEmail = ({
       <Body style={main}>
         <Container style={container}>
           <Section>
-            <Column>
+            {/* <Column>
               <Img
                 src={`${process.env.NEXT_PUBLIC_SERVER_URL}/hippo-email-sent.png`}
                 width='100'
                 height='100'
                 alt='Receipt HOR'
               />
-            </Column>
+            </Column> */}
 
             <Column align='right' style={tableCell}>
               <Text style={heading}>Receipt</Text>
@@ -116,7 +118,7 @@ export const ReceiptEmail = ({
                 </Column>
                 <Column style={{ paddingLeft: '22px' }}>
                   <Text style={productTitle}>
-                    {product.name}
+                    {product.name} x {product.quantity}
                   </Text>
                   {product.description ? (
                     <Text style={productDescription}>
@@ -139,7 +141,7 @@ export const ReceiptEmail = ({
                   style={productPriceWrapper}
                   align='right'>
                   <Text style={productPrice}>
-                    {formatPrice(product.price)}
+                    {formatPrice(product.price * product.quantity)}
                   </Text>
                 </Column>
               </Section>

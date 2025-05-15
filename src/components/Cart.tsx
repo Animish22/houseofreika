@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react'
 
 const Cart = () => {
   const { items } = useCart()
-  const itemCount = items.length
+  const itemCount = items.reduce((prev, curr) => prev + curr.quantity, 0)
 
   const [isMounted, setIsMounted] = useState<boolean>(false)
 
@@ -30,7 +30,7 @@ const Cart = () => {
   }, [])
 
   const cartTotal = items.reduce(
-    (total, { product }) => total + product.price,
+    (total, { product, quantity }) => total + (product.price * quantity),
     0
   )
 
@@ -49,15 +49,16 @@ const Cart = () => {
       </SheetTrigger>
       <SheetContent className='flex w-full flex-col pr-0 sm:max-w-lg'>
         <SheetHeader className='space-y-2.5 pr-6'>
-          <SheetTitle>Cart ({itemCount})</SheetTitle>
+          <SheetTitle>Cart ({itemCount} {itemCount === 1 ? 'item' : 'items'})</SheetTitle>
         </SheetHeader>
         {itemCount > 0 ? (
           <>
             <div className='flex w-full flex-col pr-6'>
               <ScrollArea>
-                {items.map(({ product }) => (
+                {items.map(({ product, quantity }) => (
                   <CartItem
                     product={product}
+                    quantity={quantity}
                     key={product.id}
                   />
                 ))}
@@ -67,8 +68,8 @@ const Cart = () => {
               <Separator />
               <div className='space-y-1.5 text-sm'>
                 <div className='flex'>
-                  <span className='flex-1'>Shipping</span>
-                  <span>Free</span>
+                  <span className='flex-1'>Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})</span>
+                  <span>{formatPrice(cartTotal)}</span>
                 </div>
                 <div className='flex'>
                   <span className='flex-1'>
@@ -76,7 +77,7 @@ const Cart = () => {
                   </span>
                   <span>{formatPrice(fee)}</span>
                 </div>
-                <div className='flex'>
+                <div className='flex font-semibold'>
                   <span className='flex-1'>Total</span>
                   <span>
                     {formatPrice(cartTotal + fee)}

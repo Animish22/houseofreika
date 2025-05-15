@@ -17,13 +17,13 @@ const perks = [
     name: 'Instant Delivery',
     Icon: ArrowDownToLine,
     description:
-      'Get your items delivered to your email in seconds and download them right away.', // Adjusted for physical/digital flexibility
+      'Get your items images delivered to your email in seconds and download them right away.', 
   },
   {
     name: 'Guaranteed Quality',
     Icon: CheckCircle,
     description:
-      'Every item on HouseOfReika is verified by our team to ensure our highest quality standards. Not happy? We offer a 30-day refund guarantee.',
+      'Every item on HouseOfReika is verified by our team to ensure our highest quality standards.'
   },
   {
     name: 'Curated Collections', // Changed from "For the Planet" to something more e-commerce relevant
@@ -37,17 +37,25 @@ export default function Home() {
   return (
     <>
       {/* Video Background Section */}
-      <section className='video-background-section'>
-        <video autoPlay loop muted playsInline> 
-          <source src="/videos/vidd.mp4" type="video/mp4" /> */
+      <section className='relative h-[100vh] w-full overflow-hidden'>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className='absolute top-0 left-0 w-full h-full object-cover'
+        >
+          <source src="/videos/vidd.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <div className="video-overlay"></div> {/* Optional dark overlay */}
+
+        <div className='absolute inset-0 bg-black/50'></div>
+
         <MaxWidthWrapper className='relative z-10 h-full flex flex-col justify-center'>
           <div className='py-20 mx-auto text-center flex flex-col items-center max-w-3xl'>
-            <h1 className='text-4xl font-bold tracking-tight text-white sm:text-6xl'> {/* Text white for video bg */}
+            <h1 className='text-4xl font-bold tracking-tight text-white sm:text-6xl'>
               HouseOfReika: Your destination for{' '}
-              <span className='text-primary'> {/* Use primary color (Cherry Red) */}
+              <span className='text-primary'>
                 exclusive style
               </span>
               .

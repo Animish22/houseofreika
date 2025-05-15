@@ -229,6 +229,22 @@ export const Products: CollectionConfig = {
       },
     },
     {
+      name: 'stockAvailable',
+      label: 'Stock Available',
+      type: 'number',
+      required: true,
+      access: {
+        create: ({ req }) => req.user.role === 'admin',
+        read: ({ req }) => req.user.role === 'admin',
+        update: ({ req }) => req.user.role === 'admin',
+      },
+      min: 0,
+      defaultValue: 1,
+      admin: {
+        description: 'Number of items available in inventory'
+      }
+    },
+    {
       name: 'images',
       type: 'array',
       label: 'Product images',

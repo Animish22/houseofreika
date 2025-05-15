@@ -5,7 +5,7 @@ import { Product } from '@/payload-types'
 import { ImageIcon, X } from 'lucide-react'
 import Image from 'next/image'
 
-const CartItem = ({ product }: { product: Product }) => {
+const CartItem = ({ product , quantity }: { product: Product , quantity : number }) => {
   const { image } = product.images[0]
 
   const { removeItem } = useCart()
@@ -39,6 +39,10 @@ const CartItem = ({ product }: { product: Product }) => {
           <div className='flex flex-col self-start'>
             <span className='line-clamp-1 text-base font-semibold mb-1 text-foreground'>
               {product.name}
+            </span>
+
+            <span className='line-clamp-1 text-base font-semibold mb-1 text-foreground'>
+              Quantity : {quantity}
             </span>
 
             <span className='line-clamp-1 text-sm capitalize text-muted-foreground'>

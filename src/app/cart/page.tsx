@@ -1,32 +1,35 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { PRODUCT_CATEGORIES } from '@/config'
 import { useCart } from '@/hooks/use-cart'
 import { cn, formatPrice } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
+import { PRODUCT_CATEGORIES } from '@/config'
 import { Check, Loader2, X } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import Link from 'next/link'
 
 const Page = () => {
-  const { items, removeItem, clearCart } = useCart()
-
+  const { items, removeItem, clearCart, updateQuantity } = useCart()
   const router = useRouter()
-
+  
   const [customerName, setCustomerName] = useState('')
   const [shippingAddress, setShippingAddress] = useState('')
+
+  const cartItems = items.map(({ product, quantity }) => ({
+    productId: product.id,
+    quantity: quantity
+  }))
 
   const { mutate: createCheckoutSession, isLoading } =
     trpc.payment.createSession.useMutation({
       onSuccess: ({ url }) => {
         console.log(url, "done");
         if (url) {
-          // clearCart();
           router.push(url);
         }
       }
@@ -36,16 +39,13 @@ const Page = () => {
     return customerName.trim() !== '' && shippingAddress.trim() !== '' && items.length > 0
   }
 
-  const productIds = items.map(({ product }) => product.id)
-  console.log("Items are : " , items) ; 
-
   const [isMounted, setIsMounted] = useState<boolean>(false)
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
   const cartTotal = items.reduce(
-    (total, { product }) => total + product.price,
+    (total, { product, quantity }) => total + (product.price * quantity),
     0
   )
 
@@ -95,7 +95,7 @@ const Page = () => {
                   isMounted && items.length > 0,
               })}>
               {isMounted &&
-                items.map(({ product }) => {
+                items.map(({ product, quantity }) => {
                   const label = PRODUCT_CATEGORIES.find(
                     (c) => c.value === product.category
                   )?.label
@@ -108,15 +108,14 @@ const Page = () => {
                       className='flex py-6 sm:py-10'>
                       <div className='flex-shrink-0'>
                         <div className='relative h-24 w-24'>
-                          {typeof image !== 'string' &&
-                            image.url ? (
+                          {typeof image !== 'string' && (
                             <Image
                               fill
-                              src={image.url}
+                              src={image.url as string}
                               alt='product image'
                               className='h-full w-full rounded-md object-cover object-center sm:h-48 sm:w-48'
                             />
-                          ) : null}
+                          )}
                         </div>
                       </div>
 
@@ -139,18 +138,46 @@ const Page = () => {
                               </p>
                             </div>
 
-                            <p className='mt-1 text-sm font-medium text-gray-900'>
-                              {formatPrice(product.price)}
-                            </p>
+                            <div className='mt-1 flex items-center space-x-2'>
+                              <p className='text-sm font-medium text-gray-900'>
+                                {formatPrice(product.price)} × {quantity}
+                              </p>
+                              <p className='text-sm font-medium text-gray-900'>
+                                = {formatPrice(product.price * quantity)}
+                              </p>
+                            </div>
+
+                            <div className='mt-2 flex items-center space-x-2'>
+                              <p className='text-sm text-gray-500'>
+                                Quantity: {quantity}
+                              </p>
+                              <div className='flex items-center space-x-2'>
+                                <Button
+                                  onClick={() => updateQuantity(product.id, Math.max(0, quantity - 1))}
+                                  variant='outline'
+                                  size='sm'
+                                  className='h-7 w-7 p-0'
+                                >
+                                  -
+                                </Button>
+                                <span className='text-sm'>{quantity}</span>
+                                <Button
+                                  onClick={() => updateQuantity(product.id, quantity + 1)}
+                                  variant='outline'
+                                  size='sm'
+                                  className='h-7 w-7 p-0'
+                                >
+                                  +
+                                </Button>
+                              </div>
+                            </div>
                           </div>
 
                           <div className='mt-4 sm:mt-0 sm:pr-9 w-20'>
                             <div className='absolute right-0 top-0'>
                               <Button
                                 aria-label='remove product'
-                                onClick={() =>
-                                  removeItem(product.id)
-                                }
+                                onClick={() => removeItem(product.id)}
                                 variant='ghost'>
                                 <X
                                   className='h-5 w-5'
@@ -163,10 +190,7 @@ const Page = () => {
 
                         <p className='mt-4 flex space-x-2 text-sm text-gray-700'>
                           <Check className='h-5 w-5 flex-shrink-0 text-green-500' />
-
-                          <span>
-                            Eligible for instant delivery
-                          </span>
+                          <span>Eligible for instant delivery</span>
                         </p>
                       </div>
                     </li>
@@ -174,7 +198,6 @@ const Page = () => {
                 })}
             </ul>
           </div>
-
 
           <section className='mt-8 lg:col-span-7'>
             <div className='rounded-lg bg-gray-50 px-4 py-6 sm:p-6'>
@@ -221,15 +244,9 @@ const Page = () => {
 
             <div className='mt-6 space-y-4'>
               <div className='flex items-center justify-between'>
-                <p className='text-sm text-gray-600'>
-                  Subtotal
-                </p>
+                <p className='text-sm text-gray-600'>Subtotal</p>
                 <p className='text-sm font-medium text-gray-900'>
-                  {isMounted ? (
-                    formatPrice(cartTotal)
-                  ) : (
-                    <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
-                  )}
+                  {formatPrice(cartTotal)}
                 </p>
               </div>
 
@@ -238,11 +255,7 @@ const Page = () => {
                   <span>Flat Transaction Fee</span>
                 </div>
                 <div className='text-sm font-medium text-gray-900'>
-                  {isMounted ? (
-                    formatPrice(fee)
-                  ) : (
-                    <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
-                  )}
+                  {formatPrice(fee)}
                 </div>
               </div>
 
@@ -251,11 +264,7 @@ const Page = () => {
                   Order Total
                 </div>
                 <div className='text-base font-medium text-gray-900'>
-                  {isMounted ? (
-                    formatPrice(cartTotal + fee)
-                  ) : (
-                    <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
-                  )}
+                  {formatPrice(cartTotal + fee)}
                 </div>
               </div>
             </div>
@@ -265,9 +274,9 @@ const Page = () => {
                 disabled={!isFormValid() || isLoading}
                 onClick={() =>
                   createCheckoutSession({
-                    productIds,
+                    items: cartItems,
                     customerName,
-                    shippingAddress
+                    shippingAddress,
                   })
                 }
                 className='w-full'

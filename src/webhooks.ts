@@ -3,7 +3,7 @@ import { WebhookRequest } from './server'
 import { stripe } from './lib/stripe'
 import type Stripe from 'stripe'
 import { getPayloadClient } from './get-payload'
-import { Product } from './payload-types'
+import { Product, User } from './payload-types'
 import { Resend } from 'resend'
 import { ReceiptEmailHtml } from './components/emails/ReceiptEmail'
 import { ToOwnerEmailHtml } from './components/emails/ToOwnerEmail'
@@ -102,42 +102,48 @@ export const stripeWebhookHandler = async (
         },
       },
     })    
-    console.log("done");
+    console.log("done");    // send receipt to customer and notification to owner
+    try {
+      const orderWithProducts = order as unknown as {
+        products: Array<{ product: Product; quantity: number }>
+        user: User
+      }
 
-    // send receipt to customer and notification to owner
-    // try {
-    //   // Send receipt to customer
-    //   await resend.emails.send({
-    //     from: 'House of Reika <onboarding@resend.dev>',
-    //     to: [user.email as string],
-    //     subject: 'Thanks for your order! This is your receipt.',
-    //     html: ReceiptEmailHtml({
-    //       date: new Date(),
-    //       email: user.email as string,
-    //       orderId: session.metadata.orderId as string,
-    //       products: order.products as Product[],
-    //     }).toString()
-    //   });
+      // Send receipt to customer
+      // await resend.emails.send({
+      //   from: 'House of Reika <onboarding@resend.dev>',
+      //   to: [user.email as string],
+      //   subject: 'Thanks for your order! This is your receipt.',
+      //   html: ReceiptEmailHtml({
+      //     date: new Date(),
+      //     email: user.email as string,
+      //     orderId: session.metadata.orderId as string,
+      //     products: orderWithProducts.products.map(({ product }) => product)
+      //   }).toString()
+      // });
 
-    //   // Send notification to owner
-    //   await resend.emails.send({
-    //     from: 'House of Reika <onboarding@resend.dev>',
-    //     to: ['houseofreika@gmail.com'],
-    //     subject: `New Order Received from ${session.metadata.customerName}`,
-    //     html: ToOwnerEmailHtml({
-    //       customerName: session.metadata.customerName as string,
-    //       shippingAddress: session.metadata.shippingAddress as string,
-    //       date: new Date(),
-    //       orderId: session.metadata.orderId as string,
-    //       products: order.products as Product[],
-    //     }).toString()
-    //   });
+      // Send notification to owner
+      // await resend.emails.send({
+      //   from: 'House of Reika <onboarding@resend.dev>',
+      //   to: ['houseofreika@gmail.com'],
+      //   subject: `New Order Received from ${session.metadata.customerName}`,
+      //   html: ToOwnerEmailHtml({
+      //     customerName: session.metadata.customerName as string,
+      //     shippingAddress: session.metadata.shippingAddress as string,
+      //     date: new Date(),
+      //     orderId: session.metadata.orderId as string,
+      //     products: orderWithProducts.products.map(({ product }) => ({
+      //       ...product,
+      //       quantity: orderWithProducts.products.find(p => p.product.id === product.id)?.quantity || 1
+      //     }))
+      //   }).toString()
+      // });
 
-    //   res.status(200).json({ message: 'Emails sent successfully' })
-    // } catch (error) {
-    //   console.error('Error sending emails:', error)
-    //   res.status(500).json({ error })
-    // }
+      res.status(200).json({ message: 'Emails sent successfully' })
+    } catch (error) {
+      console.error('Error sending emails:', error)
+      res.status(500).json({ error })
+    }
   }
 
   return res.status(200).send()

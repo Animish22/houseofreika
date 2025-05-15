@@ -1,6 +1,7 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import ProductReel from '@/components/ProductReel'
 import { PRODUCT_CATEGORIES } from '@/config'
+import { SearchBar } from '@/components/SearchBar'
 
 type Param = string | string[] | undefined
 
@@ -17,6 +18,7 @@ const ProductsPage = ({
 }: ProductsPageProps) => {
   const sort = parse(searchParams.sort)
   const category = parse(searchParams.category)
+  const search = parse(searchParams.search)
 
   const label = PRODUCT_CATEGORIES.find(
     ({ value }) => value === category
@@ -24,15 +26,16 @@ const ProductsPage = ({
 
   return (
     <MaxWidthWrapper>
+      <div className='py-8'>
+        <SearchBar initialQuery={search || ''} />
+      </div>
       <ProductReel
         title={label ?? 'Browse high-quality assets'}
         query={{
           category,
           limit: 40,
-          sort:
-            sort === 'desc' || sort === 'asc'
-              ? sort
-              : undefined,
+          sort: sort === 'desc' || sort === 'asc' ? sort : undefined,
+          search,
         }}
       />
     </MaxWidthWrapper>

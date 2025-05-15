@@ -10,7 +10,7 @@ const AddToCartButton = ({
 }: {
   product: Product
 }) => {
-  const { addItem } = useCart()
+  const { addItem, items, updateQuantity } = useCart()
   const [isSuccess, setIsSuccess] = useState<boolean>(false)
 
   useEffect(() => {
@@ -21,12 +21,21 @@ const AddToCartButton = ({
     return () => clearTimeout(timeout)
   }, [isSuccess])
 
+  const handleAddToCart = () => {
+    const existingItem = items.find(item => item.product.id === product.id)
+    
+    if (existingItem) {
+      updateQuantity(product.id, existingItem.quantity + 1)
+    } else {
+      addItem(product)
+    }
+    setIsSuccess(true)
+  }
+
   return (
     <Button
-      onClick={() => {
-        addItem(product)
-        setIsSuccess(true)
-      }}
+      onClick={handleAddToCart}
+      disabled={product.stockAvailable <= 0}
       size='lg'
       variant={isSuccess ? 'secondary' : 'default'}
       className={`w-full transition-all duration-300 font-semibold tracking-wide
@@ -34,7 +43,8 @@ const AddToCartButton = ({
           ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90' 
           : 'bg-primary text-primary-foreground hover:bg-primary/90'
         }`}>
-      {isSuccess ? 'Added to Cart ✓' : 'Add to Cart'}
+      {product.stockAvailable <= 0 ?'No Stock Left For this item' : ( isSuccess ? 'Added to Cart ✓' : 'Add to Cart')  }
+      
     </Button>
   )
 }

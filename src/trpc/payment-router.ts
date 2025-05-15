@@ -11,17 +11,21 @@ import type Stripe from 'stripe'
 
 export const paymentRouter = router({
   createSession: privateProcedure
-    .input(z.object({ 
-      productIds: z.array(z.string()) ,
-      customerName : z.string(),
+    .input(z.object({
+      items: z.array(z.object({
+        productId: z.string(),
+        quantity: z.number()
+      })),
+      // productIds: z.array(z.string()) ,
+      customerName: z.string(),
       shippingAddress: z.string()
     }))
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx
       console.log("Started");
-      let { productIds , customerName , shippingAddress} = input
+      let { items, customerName, shippingAddress } = input
 
-      if (productIds.length === 0) {
+      if (items.length === 0) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
@@ -31,13 +35,11 @@ export const paymentRouter = router({
         collection: 'products',
         where: {
           id: {
-            in: productIds,
+            in: items.map(item => item.productId),
           },
         },
       })
 
-      // The filteredProducts is done to filter out the productIds that have a priceId and not an undefined or null value (as on seeing the type of price ID we see it can be null or undefined )
-      
       const filteredProducts = products.filter((prod) =>
         Boolean(prod.priceId)
       )
@@ -46,24 +48,31 @@ export const paymentRouter = router({
         collection: 'orders',
         data: {
           _isPaid: false,
-          products: filteredProducts.map((prod) => prod.id),
+          products: filteredProducts.map((prod) => ({
+            product: prod.id,
+            quantity: items.find(item => item.productId === prod.id)?.quantity || 1
+          })),
           user: user.id,
           customerName,
           shippingAddress
         },
       })
+      
       console.log(`Id - ${order.id} yeh hai bhai aur order - ${order}`)
 
       const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
         []
 
       filteredProducts.forEach((product) => {
-        line_items.push({
-          price: product.priceId!,
-          quantity: 1,
-        })
+        const cartItem = items.find(item => item.productId === product.id)
+        if (cartItem) {
+          line_items.push({
+            price: product.priceId!,
+            quantity: cartItem.quantity,
+          })
+        }
       })
-      
+
       line_items.push({
         price: 'price_1OYRd4SHkqW8GAiHQLZ9lmvf',
         quantity: 1,
@@ -87,7 +96,7 @@ export const paymentRouter = router({
             },
             line_items,
           })
-          // console.log(stripeSession.url)
+        // console.log(stripeSession.url)
         return { url: stripeSession.url }
       } catch (err) {
         console.log(err)

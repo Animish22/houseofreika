@@ -4,6 +4,7 @@ import { publicProcedure, router } from './trpc'
 import { QueryValidator } from '../lib/validators/query-validator'
 import { getPayloadClient } from '../get-payload'
 import { paymentRouter } from './payment-router'
+import { Where } from 'payload/types'
 
 export const appRouter = router({
   auth: authRouter,
@@ -19,7 +20,7 @@ export const appRouter = router({
     )
     .query(async ({ input }) => {
       const { query, cursor } = input
-      const { sort, limit, ...queryOpts } = query
+      const { sort, limit, search, ...queryOpts } = query
 
       const payload = await getPayloadClient()
 
@@ -34,6 +35,19 @@ export const appRouter = router({
         }
       })
 
+      const where:Where = {
+        approvedForSale: {
+          equals: 'approved',
+        },
+        ...parsedQueryOpts,
+      }
+
+      if (search) {
+        where.name = {
+          contains: search,
+        }
+      }
+
       const page = cursor || 1
 
       const {
@@ -42,12 +56,7 @@ export const appRouter = router({
         nextPage,
       } = await payload.find({
         collection: 'products',
-        where: {
-          approvedForSale: {
-            equals: 'approved',
-          },
-          ...parsedQueryOpts,
-        },
+        where,
         sort,
         depth: 1,
         limit,

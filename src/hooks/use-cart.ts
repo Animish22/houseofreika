@@ -7,6 +7,7 @@ import {
 
 export type CartItem = {
   product: Product
+  quantity: number
 }
 
 type CartState = {
@@ -14,6 +15,7 @@ type CartState = {
   addItem: (product: Product) => void
   removeItem: (productId: string) => void
   clearCart: () => void
+  updateQuantity: (productId: string, quantity: number) => void
 }
 
 export const useCart = create<CartState>()(
@@ -22,12 +24,20 @@ export const useCart = create<CartState>()(
       items: [],
       addItem: (product) =>
         set((state) => {
-          return { items: [...state.items, { product }] }
+          return { items: [...state.items, { product  , quantity : 1}] }
         }),
       removeItem: (id) =>
         set((state) => ({
           items: state.items.filter(
             (item) => item.product.id !== id
+          ),
+        })),
+        updateQuantity: (productId, quantity) =>
+        set((state) => ({
+          items: state.items.map((item) =>
+            item.product.id === productId
+              ? { ...item, quantity }
+              : item
           ),
         })),
       clearCart: () => set({ items: [] }),

@@ -42,12 +42,12 @@ export interface Product {
   name: string;
   description?: string | null;
   price: number;
-  // quantity?: number,
   category: 'tops' | 'co-ords' | 'dresses';
   product_files: string | ProductFile;
   approvedForSale?: ('pending' | 'approved' | 'denied') | null;
   priceId?: string | null;
   stripeId?: string | null;
+  stockAvailable: number;
   images: {
     image: string | Media;
     id?: string | null;
@@ -109,7 +109,11 @@ export interface Order {
   id: string;
   _isPaid: boolean;
   user: string | User;
-  products: (string | Product)[];
+  products: {
+    product: string | Product;
+    quantity: number;
+    id?: string | null;
+  }[];
   customerName: string;
   shippingAddress: string;
   updatedAt: string;

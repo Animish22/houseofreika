@@ -45,9 +45,15 @@ const yourOwnAndPurchased: Access = async ({ req }) => {
             'Search depth not sufficient to find purchased file IDs'
           )
 
-        return typeof product.product_files === 'string'
-          ? product.product_files
-          : product.product_files.id
+        const productData = typeof product.product === 'string'
+          ? null
+          : product.product
+
+        if (!productData) return null
+
+        return typeof productData.product_files === 'string'
+          ? productData.product_files
+          : productData.product_files.id
       })
     })
     .filter(Boolean)

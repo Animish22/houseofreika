@@ -36,8 +36,8 @@ const ThankYouPage = async ({
 
   const [order] = await orders
 
-  console.log( ` order isPaid ${order?._isPaid} `) ; 
-    
+  console.log(` order isPaid ${order?._isPaid} `);
+
   if (!order) return notFound()
 
   const orderUserId =
@@ -51,10 +51,9 @@ const ThankYouPage = async ({
     )
   }
 
-  const products = order.products as Product[]
 
-  const orderTotal = products.reduce((total, product) => {
-    return total + product.price
+  const orderTotal = order.products.reduce((total, { product, quantity }) => {
+    return total + (product.price * quantity)
   }, 0)
 
   return (
@@ -106,63 +105,59 @@ const ThankYouPage = async ({
               </div>
 
               <ul className='mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-muted-foreground'>
-                {(order.products as Product[]).map(
-                  (product) => {
-                    const label = PRODUCT_CATEGORIES.find(
-                      ({ value }) =>
-                        value === product.category
-                    )?.label
+                {order.products.map(({ product, quantity }) => {
+                  const label = PRODUCT_CATEGORIES.find(
+                    ({ value }) => value === product.category
+                  )?.label
 
-                    const downloadUrl = (
-                      product.product_files as ProductFile
-                    ).url as string
+                  // Safely handle product_files access
+                  const downloadUrl = product.product_files
+                    ? typeof product.product_files === 'string'
+                      ? product.product_files
+                      : product.product_files.url
+                    : undefined
 
-                    const { image } = product.images[0]
+                  const { image } = product.images[0]
 
-                    return (
-                      <li
-                        key={product.id}
-                        className='flex space-x-6 py-6'>
-                        <div className='relative h-24 w-24'>
-                          {typeof image !== 'string' &&
-                          image.url ? (
-                            <Image
-                              fill
-                              src={image.url}
-                              alt={`${product.name} image`}
-                              className='flex-none rounded-md bg-gray-100 object-cover object-center'
-                            />
-                          ) : null}
+                  return (
+                    <li
+                      key={product.id}
+                      className='flex space-x-6 py-6'>
+                      <div className='relative h-24 w-24'>
+                        {typeof image !== 'string' && image.url ? (
+                          <Image
+                            fill
+                            src={image.url}
+                            alt={`${product.name} image`}
+                            className='flex-none rounded-md bg-gray-100 object-cover object-center'
+                          />
+                        ) : null}
+                      </div>
+
+                      <div className='flex-auto flex flex-col justify-between'>
+                        <div className='space-y-1'>
+                          <h3 className='text-gray-900'>{product.name}</h3>
+                          <p className='my-1'>Category: {label}</p>
+                          <p className='text-gray-900'>
+                            {formatPrice(product.price)} x {quantity}
+                          </p>
+                          <p className='text-gray-900 font-medium'>
+                            = {formatPrice(product.price * quantity)}
+                          </p>
                         </div>
 
-                        <div className='flex-auto flex flex-col justify-between'>
-                          <div className='space-y-1'>
-                            <h3 className='text-gray-900'>
-                              {product.name}
-                            </h3>
-
-                            <p className='my-1'>
-                              Category: {label}
-                            </p>
-                          </div>
-
-                          {order._isPaid ? (
-                            <a
-                              href={downloadUrl}
-                              download={product.name}
-                              className='text-blue-600 hover:underline underline-offset-2'>
-                              Download asset
-                            </a>
-                          ) : null}
-                        </div>
-
-                        <p className='flex-none font-medium text-gray-900'>
-                          {formatPrice(product.price)}
-                        </p>
-                      </li>
-                    )
-                  }
-                )}
+                        {order._isPaid && downloadUrl ? (
+                          <a
+                            href={downloadUrl}
+                            download={product.name}
+                            className='text-blue-600 hover:underline underline-offset-2'>
+                            Download asset
+                          </a>
+                        ) : null}
+                      </div>
+                    </li>
+                  )
+                })}
               </ul>
 
               <div className='space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-muted-foreground'>

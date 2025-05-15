@@ -64,6 +64,9 @@ const Footer = () => {
                       Get started &rarr;
                     </Link>
                   </p> */}
+                  <p className='mt-2 text-sm text-muted-foreground'>
+                    For any queries you can contact us at <span className='whitespace-nowrap font-medium text-primary hover:text-primary/80'> houseofreika.official@gmail.com </span> {' '}
+                  </p>
                 </div>
               </div>
             </div>

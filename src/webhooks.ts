@@ -189,6 +189,7 @@ export const razorpayWebhookHandler = async (req: express.Request, res: express.
     if (event.event === 'payment.captured') {
       console.log("entered")
       const { notes } = event.payload.payment.entity;
+      console.log("orderId is " , notes?.orderId);
       if (!notes?.orderId) {
         console.log("Missing orderId in payment notes")
         return res.status(400).json({ error: 'Missing orderId in payment notes' });

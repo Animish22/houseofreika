@@ -260,21 +260,21 @@ export const razorpayWebhookHandler = async (req: express.Request, res: express.
         // });
 
         // Send notification to owner
-        await resend.emails.send({
-          from: 'House of Reika <support@houseofreika.com>',
-          to: ['houseofreika.official@gmail.com'],
-          subject: `New Order Received from ${order.customerName}`,
-          react: React.createElement(ToOwnerEmailHtml, {
-            customerName: order.customerName as string,
-            shippingAddress: order.shippingAddress as string,
-            date: new Date(),
-            orderId: notes.orderId,
-            products: orderWithProducts.products.map(({ product }) => ({
-              ...product,
-              quantity: orderWithProducts.products.find(p => p.product.id === product.id)?.quantity || 1
-            }))
-          })
-        });
+        // await resend.emails.send({
+        //   from: 'House of Reika <support@houseofreika.com>',
+        //   to: ['houseofreika.official@gmail.com'],
+        //   subject: `New Order Received from ${order.customerName}`,
+        //   react: React.createElement(ToOwnerEmailHtml, {
+        //     customerName: order.customerName as string,
+        //     shippingAddress: order.shippingAddress as string,
+        //     date: new Date(),
+        //     orderId: notes.orderId,
+        //     products: orderWithProducts.products.map(({ product }) => ({
+        //       ...product,
+        //       quantity: orderWithProducts.products.find(p => p.product.id === product.id)?.quantity || 1
+        //     }))
+        //   })
+        // });
 
         console.log("Emails sent successfully");
       } catch (emailError) {

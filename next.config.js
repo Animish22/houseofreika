@@ -22,6 +22,14 @@ const nextConfig = {
 			},
 			{
 				protocol: 'https',
+				hostname: 'houseofreika-production-3654.up.railway.app'
+			},
+			{
+				protocol: 'https',
+				hostname: '**.up.railway.app'
+			},
+			{
+				protocol: 'https',
 				hostname: "houseofreika.com"
 			}
 		],

@@ -5,22 +5,38 @@ import { NextRequest } from 'next/server'
 export const getServerSideUser = async (
   cookies: NextRequest['cookies'] | ReadonlyRequestCookies
 ) => {
-  //checks all the cookies and sees if the payload-token cookie name is present , which is the name of the cookie our payload cms sends us when a user logs in.
-  const token = cookies.get('payload-token')?.value
+  try {
+    const token = cookies.get('payload-token')?.value
 
-  const meRes = await fetch(
-    //this is a REST api endpoint automatically generated for us by our payload cms and is used to fetch us our currently logged in user . 
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/me`,
-    {
-      headers: {
-        Authorization: `JWT ${token}`,
-      },
+    if (!token) {
+      return { user: null }
     }
-  )
 
-  const { user } = (await meRes.json()) as {
-    user: User | null
+    if (!process.env.NEXT_PUBLIC_SERVER_URL) {
+      throw new Error('Server URL is not configured')
+    }
+
+    const meRes = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/me`,
+      {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+        cache: 'no-store',
+      }
+    )
+
+    if (!meRes.ok) {
+      throw new Error(`Failed to fetch user: ${meRes.statusText}`)
+    }
+
+    const { user } = (await meRes.json()) as {
+      user: User | null
+    }
+
+    return { user }
+  } catch (error) {
+    console.error('Error fetching user:', error)
+    return { user: null }
   }
-
-  return { user }
 }

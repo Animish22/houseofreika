@@ -60,7 +60,7 @@ export const ReceiptEmail = ({
               <Text style={heading}>Receipt</Text>
             </Column>
           </Section>
-          <Section style={informationTable}>
+          {/* <Section style={informationTable}>
             <Row style={informationTableRow}>
               <Column style={informationTableColumn}>
                 <Text style={informationTableLabel}>
@@ -95,11 +95,11 @@ export const ReceiptEmail = ({
                 </Link>
               </Column>
             </Row>
-          </Section>
-          <Section style={productTitleTable}>
+          </Section> */}
+          {/* <Section style={productTitleTable}>
             <Text style={productsTitle}>Order Summary</Text>
-          </Section>
-          {products.map((product) => {
+          </Section> */}
+          {/* {products.map((product) => {
             const { image } = product.images[0]
 
             return (
@@ -192,7 +192,7 @@ export const ReceiptEmail = ({
           <Text style={footerCopyright}>
             Copyright © 2025 HouseOfReika Inc. <br />{' '}
             <Link href='#'>All rights reserved</Link>
-          </Text>
+          </Text> */}
         </Container>
       </Body>
     </Html>

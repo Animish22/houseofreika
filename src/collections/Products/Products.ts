@@ -90,41 +90,27 @@ export const Products: CollectionConfig = {
   },
   hooks: {
     afterChange: [syncUser],
-    beforeChange: [
-      addUser,
-      async (args) => {
+    beforeChange: [      addUser,      async (args) => {
         if (args.operation === 'create') {
           const data = args.data as Product
 
-          const createdProduct =
-            await stripe.products.create({
-              name: data.name,
-              default_price_data: {
-                currency: 'INR',
-                unit_amount: Math.round(data.price * 100),
-              },
-            })
+          // Generate a unique price ID for Razorpay
+          const priceId = `rzr_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
 
           const updated: Product = {
             ...data,
-            stripeId: createdProduct.id,
-            priceId: createdProduct.default_price as string,
+            stripeId: null, // Keep this field but set to null for Razorpay
+            priceId: priceId, // Store our generated price ID
           }
 
           return updated
         } else if (args.operation === 'update') {
           const data = args.data as Product
 
-          const updatedProduct =
-            await stripe.products.update(data.stripeId!, {
-              name: data.name,
-              default_price: data.priceId!,
-            })
-
+          // For Razorpay, we don't need to sync with external service
           const updated: Product = {
             ...data,
-            stripeId: updatedProduct.id,
-            priceId: updatedProduct.default_price as string,
+            stripeId: null, // Keep this field but set to null for Razorpay
           }
 
           return updated

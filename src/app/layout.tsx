@@ -16,8 +16,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <html lang='en' className='h-full'> 
+  return (    <html lang='en' className='h-full'> 
+      <head>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      </head>
       <body
         className={cn(
           'relative h-full font-sans antialiased',

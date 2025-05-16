@@ -24,13 +24,34 @@ const Page = () => {
     productId: product.id,
     quantity: quantity
   }))
-
   const { mutate: createCheckoutSession, isLoading } =
     trpc.payment.createSession.useMutation({
-      onSuccess: ({ url }) => {
-        console.log(url, "done");
-        if (url) {
-          router.push(url);
+      onSuccess: ({ orderId , razorpayOrderId, amount, key }) => {
+        if (razorpayOrderId) {
+          const options = {
+            key: key,
+            amount: amount,
+            currency: "INR",
+            name: "House of Reika",
+            description: "Shopping Cart Checkout",
+            order_id: razorpayOrderId,
+            handler: function (response: any) {
+              // Handle successful payment
+              router.push(`/thank-you?orderId=${orderId}`);
+            },
+            prefill: {
+              name: customerName,
+            },
+            notes: {
+              address: shippingAddress
+            },
+            theme: {
+              color: "#2563eb"
+            }
+          };
+
+          const razorpayWindow = new (window as any).Razorpay(options);
+          razorpayWindow.open();
         }
       }
     })

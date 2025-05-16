@@ -6,7 +6,7 @@ import { appRouter } from './trpc'
 import { inferAsyncReturnType } from '@trpc/server'
 import bodyParser from 'body-parser'
 import { IncomingMessage } from 'http'
-import { stripeWebhookHandler } from './webhooks'
+import { razorpayWebhookHandler, stripeWebhookHandler } from './webhooks'
 import { PayloadRequest } from 'payload/types'
 import { parse } from 'url'
 
@@ -36,11 +36,17 @@ const start = async () => {
     },
   })
 
+  // Stripe webhook (commented out but preserved)
   app.post(
     '/api/webhooks/stripe',
     webhookMiddleware,
     stripeWebhookHandler
   )
+
+  
+
+  // Register Razorpay webhook endpoint
+  app.post('/api/webhooks/razorpay', bodyParser.raw({ type: 'application/json' }), razorpayWebhookHandler);
 
   // if (process.env.NEXT_BUILD) {
   //   app.listen(PORT, async () => {

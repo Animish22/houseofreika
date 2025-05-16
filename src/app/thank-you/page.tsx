@@ -19,6 +19,9 @@ const ThankYouPage = async ({
   searchParams,
 }: PageProps) => {
   const orderId = searchParams.orderId
+  const razorpayOrderId = searchParams.razorpayOrderId
+  const razorpayPaymentId = searchParams.razorpayPaymentId
+  const razorpaySignature = searchParams.razorpaySignature
   const nextCookies = cookies()
 
   const { user } = await getServerSideUser(nextCookies)
@@ -182,11 +185,16 @@ const ThankYouPage = async ({
                   </p>
                 </div>
               </div>
-
               <PaymentStatus
                 isPaid={order._isPaid}
                 orderEmail={(order.user as User).email}
                 orderId={order.id}
+                razorpayOrderId={razorpayOrderId as string}
+                amount={order.products.reduce(
+                  (total, item) => total + (typeof item.product === 'object' ? item.product.price * item.quantity : 0),
+                  0
+                )}
+                key={process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID}
               />
 
               <div className='mt-16 border-t border-gray-200 py-6 text-right'>

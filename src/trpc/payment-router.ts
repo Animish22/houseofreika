@@ -85,7 +85,7 @@ export const paymentRouter = router({
 
         // Create Razorpay order
         const razorpayOrder = await razorpay.orders.create({
-          amount: formatAmountForRazorpay(amount),
+          amount: formatAmountForRazorpay(amount + 1),
           currency: 'INR',
           receipt: order.id.toString(),
           notes: {

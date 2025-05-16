@@ -15,6 +15,11 @@ const Providers = ({ children }: PropsWithChildren) => {
       links: [
         httpBatchLink({
           url: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/trpc`,
+          headers() {
+            return {
+              'Access-Control-Allow-Origin': '*',
+            }
+          },
           fetch(url, options) {
             return fetch(url, {
               ...options,

@@ -41,7 +41,7 @@ const PaymentStatus = ({
         currency: "INR",
         name: "House of Reika",
         description: "Payment for your order",
-        image: `${process.env.NEXT_PUBLIC_SERVER_URL}/LOGO.png`,
+        image: `${process.env.NEXT_PUBLIC_SERVER_URL}/hr.png`,
         order_id: razorpayOrderId,
         handler: function (response: RazorpayResponse) {
           // Payment successful

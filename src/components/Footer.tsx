@@ -26,7 +26,7 @@ const Footer = () => {
                 {/* Logo color can be text-muted-foreground or text-primary for subtlety or emphasis */}
                 {/* <Icons.logo className='h-12 w-auto text-muted-foreground' /> */}
                 <Image
-                  src='/logo.png' // Assuming you have a logo image in the public folder
+                  src='/hr.png' // Assuming you have a logo image in the public folder
                   alt='Logo'
                   width={40} // Adjust size as needed
                   height={40} // Adjust size as needed

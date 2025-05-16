@@ -30,11 +30,11 @@ const Navbar = async () => {
                   {/* Ensure Icons.logo is themed appropriately or is a neutral/multi-color design */}
                   {/* <Icons.logo className='h-10 w-10 text-primary' /> Example: Forcing primary color if it's a single-color SVG */}
                   <Image
-                    src='/logo.png' // Assuming you have a logo image in the public folder
+                    src='/hr.png' 
                     alt='Logo'
-                    width={40} // Adjust size as needed
-                    height={40} // Adjust size as needed
-                    className='h-10 w-10 text-primary' // Use text-primary for color if applicable
+                    width={40} 
+                    height={40} 
+                    className='h-10 w-10 text-primary'
                     />
                 </Link>
               </div>

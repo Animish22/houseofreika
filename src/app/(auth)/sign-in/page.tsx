@@ -85,7 +85,7 @@ const Page = () => {
           <div className='flex flex-col items-center space-y-2 text-center'>
             {/* <Icons.logo className='h-20 w-20' /> */}
             <Image
-              src='/logo.png' // Assuming you have a logo image in the public folder
+              src='/hr.png' // Assuming you have a logo image in the public folder
               alt='Logo'
               width={20} // Adjust size as needed
               height={20} // Adjust size as needed

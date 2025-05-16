@@ -45,11 +45,11 @@ const start = async () => {
     stripeWebhookHandler
   )
 
-  
+
 
   // Register Razorpay webhook endpoint
   app.post('/api/webhooks/razorpay', bodyParser.raw({ type: 'application/json' }), razorpayWebhookHandler);
-  
+
   const payload = await getPayloadClient({
     initOptions: {
       express: app,
@@ -58,24 +58,6 @@ const start = async () => {
       },
     },
   })
-
-
-  if (process.env.NEXT_BUILD) {
-    app.listen(PORT, async () => {
-      payload.logger.info(
-        'Next.js is building for production'
-      )
-
-      // @ts-expect-error
-      await nextBuild(path.join(__dirname, '../'))
-
-      process.exit()
-    })
-
-    return
-  }
-
-
 
   const cartRouter = express.Router()
 
@@ -101,6 +83,22 @@ const start = async () => {
       createContext,
     })
   )
+
+
+  if (process.env.NEXT_BUILD) {
+    app.listen(PORT, async () => {
+      payload.logger.info(
+        'Next.js is building for production'
+      )
+
+      // @ts-expect-error
+      await nextBuild(path.join(__dirname, '../'))
+
+      process.exit()
+    })
+
+    return
+  }
 
   // each and every response and request we receive from express is forwarded to nextJs to handle in its own way making us independent of its backend system  . Can also use its backend system if want tho  
   app.use((req, res) => nextHandler(req, res))

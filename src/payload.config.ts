@@ -16,13 +16,24 @@ dotenv.config({
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
-  collections: [Users, Products, Media, ProductFiles, Orders], 
+  collections: [Users, Products, Media, ProductFiles, Orders],
   routes: {
     admin: '/sell',
   },
   admin: {
     user: 'users',
     bundler: webpackBundler(),
+    webpack: (config) => {
+      config.resolve = {
+        ...config.resolve,
+        alias: {
+          ...(config.resolve?.alias || {}),
+          fs: path.resolve(__dirname, '../mocks/emptyModule.ts'),
+          readline: path.resolve(__dirname, '../mocks/emptyModule.ts'),          
+        },
+      };
+      return config;
+    },
     meta: {
       titleSuffix: '- HouseOfReika',
       favicon: '/favicon.ico',

@@ -23,17 +23,17 @@ export default buildConfig({
   admin: {
     user: 'users',
     bundler: webpackBundler(),
-    // webpack: (config) => {
-    //   config.resolve = {
-    //     ...config.resolve,
-    //     alias: {
-    //       ...(config.resolve?.alias || {}),
-    //       fs: path.resolve(__dirname, '../mocks/emptyModule.ts'),
-    //       readline: path.resolve(__dirname, '../mocks/emptyModule.ts'),          
-    //     },
-    //   };
-    //   return config;
-    // },
+    webpack: (config) => {
+      config.resolve = {
+        ...config.resolve,
+        alias: {
+          ...(config.resolve?.alias || {}),
+          fs: path.resolve(__dirname, '../mocks/emptyModule.ts'),
+          readline: path.resolve(__dirname, '../mocks/emptyModule.ts'),          
+        },
+      };
+      return config;
+    },
     meta: {
       titleSuffix: '- HouseOfReika',
       favicon: '/favicon.ico',

@@ -59,7 +59,7 @@ export function constructMetadata({
       creator: '@joshtriedcoding',
     },
     icons,
-    metadataBase: new URL('https://digitalhippo.up.railway.app'),
+    metadataBase: new URL('https://houseofreika-production-3654.up.railway.app'),
     ...(noIndex && {
       robots: {
         index: false,

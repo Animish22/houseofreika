@@ -29,7 +29,7 @@ const PaymentStatus = ({
     {
       enabled: isPaid === false,
       refetchInterval: (data) =>
-        data?.isPaid ? false : 1000,
+        data?.isPaid ? false : 10000,
     }
   )
 
